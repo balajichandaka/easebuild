@@ -13,6 +13,10 @@ jobs:
     name: Bootstrap EC2
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release_1.0
+
       - name: Validate SSH config
         run: |
           HOST="${{ secrets.EC2_HOST || vars.EC2_HOST }}"
@@ -27,6 +31,16 @@ jobs:
             exit 1
           fi
 
+      - name: Upload bootstrap script
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST || vars.EC2_HOST }}
+          username: ${{ secrets.EC2_USER || vars.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY || vars.EC2_SSH_KEY }}
+          source: scripts/ec2-bootstrap.sh
+          target: /tmp
+          strip_components: 1
+
       - name: Install Docker and clone repo
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -39,19 +53,17 @@ jobs:
             set -euo pipefail
             APP_DIR="${{ secrets.EC2_APP_DIR || vars.EC2_APP_DIR }}"
             if [ -z "${APP_DIR}" ]; then APP_DIR="$HOME/easebuild"; fi
-            REPO_URL="https://github.com/balajichandaka/easebuild.git"
+            REPO_URL="https://github.com/${{ github.repository }}.git"
             DEPLOY_BRANCH=release_1.0
 
-            if command -v docker >/dev/null 2>&1 && [ -d "$APP_DIR/.git" ]; then
-              echo "Docker and repo already present at $APP_DIR — skipping bootstrap."
+            if [ -d "$APP_DIR/.git" ]; then
+              echo "Repo already present at $APP_DIR — skipping bootstrap."
               exit 0
             fi
 
-            TMP=$(mktemp)
-            curl -fsSL "https://raw.githubusercontent.com/balajichandaka/easebuild/release_1.0/scripts/ec2-bootstrap.sh" -o "$TMP"
-            chmod +x "$TMP"
-            REPO_URL="$REPO_URL" APP_DIR="$APP_DIR" DEPLOY_BRANCH="$DEPLOY_BRANCH" "$TMP"
-            rm -f "$TMP"
+            chmod +x /tmp/ec2-bootstrap.sh
+            REPO_URL="$REPO_URL" APP_DIR="$APP_DIR" DEPLOY_BRANCH="$DEPLOY_BRANCH" /tmp/ec2-bootstrap.sh
+            rm -f /tmp/ec2-bootstrap.sh
 
             echo "Bootstrap complete for release_1.0."
             echo "Next: push to release_1.0 or run 'Deploy to EC2'."

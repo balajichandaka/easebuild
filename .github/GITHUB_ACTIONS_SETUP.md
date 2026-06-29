@@ -92,9 +92,8 @@ git fetch origin
 1. Launch EC2 + Elastic IP + security group (22, 80, 443)
 2. Add secrets from §1 under **repository** secrets (no GitHub environments needed)
 3. Push the `release_1.0` branch to GitHub
-4. Run **Bootstrap EC2** workflow once
-5. Push to `release_1.0` (or run **Deploy to EC2** manually)
-6. Configure DNS + Nginx + SSL on EC2 (manual, one-time)
+4. Push to `release_1.0` — first deploy auto-bootstraps EC2 (or run **Bootstrap EC2** manually first)
+5. Configure DNS + Nginx + SSL on EC2 (manual, one-time)
 
 Nginx and SSL are **not** managed by GitHub Actions — only the Docker container is rebuilt on deploy.
 
@@ -149,6 +148,7 @@ git push origin release_1.0
 |---------|-----|
 | `ssh: handshake failed` | Check `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`; security group port 22 |
 | `git fetch` fails on EC2 | Set up deploy key (private repo) or fix `git remote` |
+| `Repo not found at .../easebuild` | Push this fix, then re-run deploy — it will auto-bootstrap on first run |
 | `docker-compose: command not found` | Run **Bootstrap EC2** |
 | CI fails on lint | Fix lint locally: `npm run lint` |
 | Deploy skipped | CI must pass first; check CI job logs |

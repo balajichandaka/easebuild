@@ -35,6 +35,16 @@ install_compose_binary() {
 }
 
 install_docker() {
+  if command -v docker >/dev/null 2>&1; then
+    echo "==> Docker already installed"
+    if ! docker info >/dev/null 2>&1; then
+      sudo systemctl enable docker 2>/dev/null || true
+      sudo systemctl start docker 2>/dev/null || true
+    fi
+    sudo usermod -aG docker "$USER" 2>/dev/null || true
+    return 0
+  fi
+
   if [ -f /etc/os-release ]; then
     # shellcheck source=/dev/null
     . /etc/os-release
@@ -75,6 +85,17 @@ if [ -z "$REPO_URL" ]; then
 fi
 
 install_docker
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "==> Installing git"
+  if command -v dnf >/dev/null 2>&1; then
+    sudo dnf install -y git
+  elif command -v yum >/dev/null 2>&1; then
+    sudo yum install -y git
+  elif command -v apt-get >/dev/null 2>&1; then
+    sudo apt-get install -y git
+  fi
+fi
 
 echo "==> Cloning repository"
 if [ -d "$APP_DIR/.git" ]; then

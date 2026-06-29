@@ -21,6 +21,10 @@ jobs:
     env:
       DEPLOY_BRANCH: release_1.0
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release_1.0
+
       - name: Log deploy target
         run: |
           APP_DIR="${{ secrets.EC2_APP_DIR || vars.EC2_APP_DIR }}"
@@ -56,6 +60,16 @@ jobs:
             echo "WARNING: EC2_SSH_KEY is in Variables — move it to Secrets for security."
           fi
 
+      - name: Upload bootstrap script
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST || vars.EC2_HOST }}
+          username: ${{ secrets.EC2_USER || vars.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY || vars.EC2_SSH_KEY }}
+          source: scripts/ec2-bootstrap.sh
+          target: /tmp
+          strip_components: 1
+
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
         env:
@@ -87,12 +101,17 @@ jobs:
             echo "══════════════════════════════════════════"
 
             if [ ! -d "$APP_DIR/.git" ]; then
-              echo "ERROR: Repo not found at $APP_DIR. Run 'Bootstrap EC2' first."
-              exit 1
+              echo "==> First deploy: bootstrapping EC2 (Docker + git clone)"
+              chmod +x /tmp/ec2-bootstrap.sh
+              REPO_URL="https://github.com/${{ github.repository }}.git" \
+                APP_DIR="$APP_DIR" \
+                DEPLOY_BRANCH="release_1.0" \
+                /tmp/ec2-bootstrap.sh
+              rm -f /tmp/ec2-bootstrap.sh
             fi
 
             if ! command -v docker >/dev/null 2>&1; then
-              echo "ERROR: Docker not installed. Run 'Bootstrap EC2' first."
+              echo "ERROR: Docker not installed after bootstrap. Check bootstrap logs."
               exit 1
             fi
 

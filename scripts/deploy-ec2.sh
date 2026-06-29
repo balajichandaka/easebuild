@@ -3,7 +3,7 @@
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-$HOME/easebuild}"
-BRANCH="${DEPLOY_BRANCH:-prod}"
+BRANCH="${DEPLOY_BRANCH:-release_1.0}"
 COMPOSE_FILE="docker-compose.yml"
 
 if [ ! -d "$APP_DIR" ]; then
@@ -19,7 +19,7 @@ if [ ! -f "$COMPOSE_FILE" ]; then
 fi
 
 PUBLIC_IP="$(curl -sf http://checkip.amazonaws.com 2>/dev/null || hostname -I | awk '{print $1}')"
-echo "==> Deploy on EC2: env=${DEPLOY_ENV:-unknown} branch=$BRANCH profile=${WRITE_ENV_PROFILE:-unknown} ip=${PUBLIC_IP:-unknown} dir=$APP_DIR"
+echo "==> Deploy on EC2: branch=$BRANCH ip=${PUBLIC_IP:-unknown} dir=$APP_DIR"
 
 echo "==> Pulling latest code ($BRANCH)"
 git fetch origin "$BRANCH"

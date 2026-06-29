@@ -35,16 +35,16 @@ Open http://localhost:3000
 
 ## Deploy to EC2 (GitHub Actions)
 
-Same pattern as `charted_accountant_crm`: push to `prod` or `feature_1.0` → CI → SSH deploy to EC2.
+Single machine: push to `release_1.0` → CI → SSH deploy to EC2.
 
-See [.github/GITHUB_ACTIONS_SETUP.md](.github/GITHUB_ACTIONS_SETUP.md) for secrets, environments, and bootstrap steps.
+See [.github/GITHUB_ACTIONS_SETUP.md](.github/GITHUB_ACTIONS_SETUP.md) for secrets and bootstrap steps.
 
 Quick start:
 
-1. Create GitHub environments `production` and `staging` with `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`
-2. Push `prod` and `feature_1.0` branches
-3. Run **Bootstrap EC2** workflow once per machine
-4. Push to `prod` to deploy
+1. Add repository secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`
+2. Push the `release_1.0` branch
+3. Run **Bootstrap EC2** workflow once
+4. Push to `release_1.0` to deploy
 
 ## Projects
 

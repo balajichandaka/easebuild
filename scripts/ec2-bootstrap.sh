@@ -4,7 +4,7 @@ set -euo pipefail
 
 REPO_URL="${REPO_URL:-}"
 APP_DIR="${APP_DIR:-$HOME/easebuild}"
-DEPLOY_BRANCH="${DEPLOY_BRANCH:-prod}"
+DEPLOY_BRANCH="${DEPLOY_BRANCH:-release_1.0}"
 
 install_buildx() {
   echo "==> Installing docker buildx (required by docker-compose v5+)"

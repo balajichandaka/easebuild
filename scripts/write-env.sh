@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
-# Write repo-root .env from GitHub Actions secrets (profile: prod | staging).
+# Write repo-root .env from GitHub Actions secrets.
 set -euo pipefail
 
 APP_DIR="${APP_DIR:-$HOME/easebuild}"
 ENV_FILE="$APP_DIR/.env"
-PROFILE="${WRITE_ENV_PROFILE:-prod}"
 
-if [ -n "${APP_PUBLIC_URL:-}" ]; then
-  SITE_URL="$APP_PUBLIC_URL"
-elif [ "$PROFILE" = "staging" ]; then
-  SITE_URL="${APP_PUBLIC_URL:-http://localhost:3000}"
-else
-  SITE_URL="${APP_PUBLIC_URL:-https://easebuild.in}"
-fi
-
+SITE_URL="${APP_PUBLIC_URL:-https://easebuild.in}"
 CONTACT="${CONTACT_EMAIL:-hello@easebuild.in}"
 
 if [ -z "${APP_PUBLIC_URL:-}" ] && [ ! -f "$ENV_FILE" ]; then
@@ -33,4 +25,4 @@ umask 077
   printf '%s=%s\n' APP_PORT "${APP_PORT:-3000}"
 } > "$ENV_FILE"
 
-echo "Wrote $ENV_FILE from deploy secrets (profile: $PROFILE)"
+echo "Wrote $ENV_FILE from deploy secrets"

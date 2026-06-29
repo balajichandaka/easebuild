@@ -1,11 +1,11 @@
 # GitHub Actions — EC2 Deploy Setup
 
-Automated deploy: push to `prod` or `feature_1.0` → CI → SSH to the matching EC2 environment → rebuild container.
+Single-machine deploy: push to `release_1.0` → CI → SSH to EC2 → rebuild container.
 
 Workflow files:
 
 - `.github/workflows/ci.yml` — build + lint
-- `.github/workflows/bootstrap-ec2.yml` — **one-time** Docker + clone on new EC2
+- `.github/workflows/bootstrap-ec2.yml` — **one-time** Docker + clone on EC2
 - `.github/workflows/deploy.yml` — deploy after CI passes
 
 ---
@@ -14,7 +14,7 @@ Workflow files:
 
 Go to **GitHub repo → Settings → Secrets and variables → Actions → New repository secret**
 
-### SSH
+### SSH (required)
 
 | Secret | Value | Example |
 |--------|-------|---------|
@@ -23,7 +23,7 @@ Go to **GitHub repo → Settings → Secrets and variables → Actions → New r
 | `EC2_SSH_KEY` | Full contents of your `.pem` private key | `-----BEGIN RSA PRIVATE KEY-----...` |
 | `EC2_APP_DIR` | Optional app path on EC2 | `~/easebuild` |
 
-### Application (written to `.env` on each deploy)
+### Application (optional — written to `.env` on each deploy)
 
 | Secret | Value | Example |
 |--------|-------|---------|
@@ -40,24 +40,9 @@ Paste the entire file including `BEGIN` and `END` lines.
 
 ---
 
-## 2. GitHub environments (required for two machines)
+## 2. EC2 must pull code from GitHub
 
-Create two environments under **Settings → Environments**:
-
-| Environment | Branch | Machine |
-|-------------|--------|---------|
-| `production` | `prod` | Production EC2 |
-| `staging` | `feature_1.0` | Staging EC2 |
-
-Add the secrets from §1 to **each environment** with that machine's `EC2_HOST` and key.
-
-Optional: enable **Required reviewers** on `production` only.
-
----
-
-## 3. EC2 must pull code from GitHub
-
-GitHub Actions SSHs into EC2 and runs `git fetch` + `git reset --hard origin/<branch>`.
+GitHub Actions SSHs into EC2 and runs `git fetch` + `git reset --hard origin/release_1.0`.
 
 ### Option A — Public repository
 
@@ -66,7 +51,7 @@ No extra setup. Ensure the remote is correct on EC2:
 ```bash
 cd ~/easebuild
 git remote -v
-git fetch origin prod
+git fetch origin release_1.0
 ```
 
 ### Option B — Private repository (deploy key)
@@ -102,13 +87,13 @@ git fetch origin
 
 ---
 
-## 4. New machine checklist
+## 3. Setup checklist
 
 1. Launch EC2 + Elastic IP + security group (22, 80, 443)
-2. Create `production` and/or `staging` GitHub environments with secrets from §1
-3. Push `prod` and `feature_1.0` branches to GitHub
-4. Run **Bootstrap EC2 (one-time)** workflow for each environment
-5. Run **Deploy to EC2** workflow (or push to `prod`)
+2. Add secrets from §1 under **repository** secrets (no GitHub environments needed)
+3. Push the `release_1.0` branch to GitHub
+4. Run **Bootstrap EC2** workflow once
+5. Push to `release_1.0` (or run **Deploy to EC2** manually)
 6. Configure DNS + Nginx + SSL on EC2 (manual, one-time)
 
 Nginx and SSL are **not** managed by GitHub Actions — only the Docker container is rebuilt on deploy.
@@ -134,51 +119,44 @@ Then run `sudo certbot --nginx -d easebuild.in -d www.easebuild.in`.
 
 ---
 
-## 5. How deploy is triggered
+## 4. How deploy is triggered
 
-| Trigger | Branch | Target environment |
-|---------|--------|-------------------|
-| Push to `prod` | `prod` | **production** |
-| Push to `feature_1.0` | `feature_1.0` | **staging** |
-| Manual: **Bootstrap EC2** | — | Choose production or staging |
-| Manual: **Deploy to EC2** | chosen branch | matching environment |
+| Trigger | What happens |
+|---------|----------------|
+| Push to `release_1.0` | CI + deploy automatically |
+| Manual: **Bootstrap EC2** | One-time Docker + clone |
+| Manual: **Deploy to EC2** | CI + deploy on demand |
 
 Monitor: **GitHub → Actions** tab.
 
 ---
 
-## 6. Typical developer workflow
+## 5. Typical developer workflow
 
 ```bash
-# Develop on main, merge to staging for preview
-git checkout feature_1.0
+# Develop on main, deploy when ready
+git checkout release_1.0
 git merge main
-git push origin feature_1.0
-# → CI + deploy to staging EC2
-
-# Promote to production
-git checkout prod
-git merge feature_1.0
-git push origin prod
-# → CI + deploy to production EC2
+git push origin release_1.0
+# → CI + deploy to EC2
 ```
 
 ---
 
-## 7. Troubleshooting
+## 6. Troubleshooting
 
 | Failure | Fix |
 |---------|-----|
 | `ssh: handshake failed` | Check `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`; security group port 22 |
 | `git fetch` fails on EC2 | Set up deploy key (private repo) or fix `git remote` |
-| `docker-compose: command not found` | Run **Bootstrap EC2** or install compose on EC2 |
+| `docker-compose: command not found` | Run **Bootstrap EC2** |
 | CI fails on lint | Fix lint locally: `npm run lint` |
 | Deploy skipped | CI must pass first; check CI job logs |
-| Bootstrap curl fails | Push `prod`/`feature_1.0` branches first so bootstrap script is on GitHub |
+| Bootstrap curl fails | Push `release_1.0` branch first so bootstrap script is on GitHub |
 
 ---
 
-## 8. Verify after deploy
+## 7. Verify after deploy
 
 On EC2:
 

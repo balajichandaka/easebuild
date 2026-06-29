@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EaseBuild
 
-## Getting Started
+Portfolio site for **EaseBuild** — showcases live web applications built for businesses.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router)
+- TypeScript + Tailwind CSS
+- Static content in `src/content/projects.json`
+- Deploy on [Vercel](https://vercel.com) (free tier)
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Add a project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Edit `src/content/projects.json`
+2. Add a screenshot under `public/projects/` (optional SVG or PNG)
+3. Commit and push — Vercel redeploys automatically
 
-## Learn More
+## Deploy to Vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. Push this repo to GitHub (`easebuild`)
+2. Import project at [vercel.com/new](https://vercel.com/new)
+3. Optional env vars:
+   - `NEXT_PUBLIC_SITE_URL` = `https://easebuild.in`
+   - `NEXT_PUBLIC_CONTACT_EMAIL` = your email
+4. Point domain **easebuild.in** to Vercel DNS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to EC2 (GitHub Actions)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Same pattern as `charted_accountant_crm`: push to `prod` or `feature_1.0` → CI → SSH deploy to EC2.
 
-## Deploy on Vercel
+See [.github/GITHUB_ACTIONS_SETUP.md](.github/GITHUB_ACTIONS_SETUP.md) for secrets, environments, and bootstrap steps.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Quick start:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create GitHub environments `production` and `staging` with `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`
+2. Push `prod` and `feature_1.0` branches
+3. Run **Bootstrap EC2** workflow once per machine
+4. Push to `prod` to deploy
+
+## Projects
+
+| Slug | Live URL |
+|------|----------|
+| cafirmops | https://cafirmops.in |

@@ -1,0 +1,19 @@
+# EaseBuild portfolio — EC2 production stack.
+# Nginx on 80/443 → web :3000
+#
+#   cp .env.example .env
+#   ./scripts/compose.sh up --build -d
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: "${APP_PUBLIC_URL:-https://easebuild.in}"
+        NEXT_PUBLIC_CONTACT_EMAIL: "${CONTACT_EMAIL:-hello@easebuild.in}"
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    ports:
+      - "${APP_PORT:-3000}:3000"

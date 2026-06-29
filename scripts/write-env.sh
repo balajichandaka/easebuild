@@ -22,7 +22,7 @@ umask 077
 {
   printf '%s=%s\n' APP_PUBLIC_URL "$SITE_URL"
   printf '%s=%s\n' CONTACT_EMAIL "$CONTACT"
-  printf '%s=%s\n' APP_PORT "${APP_PORT:-3000}"
+  printf '%s=%s\n' APP_PORT "${APP_PORT:-3001}"
 } > "$ENV_FILE"
 
 echo "Wrote $ENV_FILE from deploy secrets"

@@ -1,5 +1,5 @@
 # EaseBuild portfolio — EC2 production stack.
-# Nginx on 80/443 → web :3000
+# Nginx on 80/443 → web host port (default 3001; CRM uses 3000 on shared EC2)
 #
 #   cp .env.example .env
 #   ./scripts/compose.sh up --build -d
@@ -16,4 +16,4 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "${APP_PORT:-3001}:3000"

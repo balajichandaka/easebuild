@@ -97,14 +97,16 @@ git fetch origin
 
 Nginx and SSL are **not** managed by GitHub Actions — only the Docker container is rebuilt on deploy.
 
-### Nginx example (reverse proxy to :3000)
+### Nginx example (reverse proxy to :3001)
+
+Use port **3001** on the host when this EC2 also runs CA Firm Ops (CRM frontend uses 3000).
 
 ```nginx
 server {
     listen 80;
     server_name easebuild.in www.easebuild.in;
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -162,7 +164,7 @@ On EC2:
 
 ```bash
 docker ps
-curl -I http://localhost:3000
+curl -I http://localhost:3001
 ```
 
 Browser: https://easebuild.in

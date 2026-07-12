@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
   },
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: "/logo.png" },
 };
 
 export default function RootLayout({

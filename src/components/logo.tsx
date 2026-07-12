@@ -1,11 +1,10 @@
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 import { site } from "@/content/site";
 
 /**
- * Brand mark: a rounded "CA" monogram (product blue) with a small brass "seal"
- * tick — a nod to a verified/attested filing — plus the wordmark.
+ * Brand mark: logo image plus the wordmark.
  * `tone` switches text colour for light vs dark (ink) backgrounds.
- * To use a real logo image instead, drop it in /public and swap the monogram span.
  */
 export function Logo({
   tone = "light",
@@ -18,13 +17,13 @@ export function Logo({
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <span className="relative grid size-9 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-blue to-blue-deep font-display text-[15px] font-bold text-white shadow-sm">
-        CA
-        <span
-          className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full border-2 border-paper bg-brass"
-          aria-hidden
-        />
-      </span>
+      <Image
+        src="/logo.png"
+        alt={site.name}
+        width={36}
+        height={36}
+        className="size-9 shrink-0 rounded-lg object-contain"
+      />
       <span className="flex flex-col leading-none">
         <span
           className={cn(

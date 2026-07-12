@@ -19,7 +19,7 @@ export function Features() {
             <Reveal
               key={f.title}
               delay={(i % 3) * 70}
-              className="group bg-card p-6 transition-colors hover:bg-blue-tint/40"
+              className="group flex flex-col items-center bg-card p-6 text-center transition-colors hover:bg-blue-tint/40"
             >
               <span className="grid size-11 place-items-center rounded-lg border border-line bg-paper text-blue transition-colors group-hover:border-blue/30 group-hover:bg-card">
                 <Icon name={f.icon} className="size-5" />

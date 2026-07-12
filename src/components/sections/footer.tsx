@@ -7,15 +7,15 @@ export function Footer() {
   return (
     <footer className="bg-ink py-14 text-paper">
       <Container>
-        <div className="flex flex-col justify-between gap-10 md:flex-row">
-          <div className="max-w-xs">
+        <div className="flex flex-col items-center justify-between gap-10 text-center md:flex-row">
+          <div className="mx-auto max-w-xs">
             <Logo tone="dark" />
             <p className="mt-4 text-sm leading-relaxed text-paper/55">
               {site.tagline}. Built for Indian chartered accountant practices.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-10 text-center sm:grid-cols-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-paper/40">
                 Product

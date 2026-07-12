@@ -20,7 +20,7 @@ export function Security() {
             <Reveal
               key={p.title}
               delay={i * 90}
-              className="rounded-xl border border-white/10 bg-ink-2 p-6 transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-white/20"
+              className="flex flex-col items-center rounded-xl border border-white/10 bg-ink-2 p-6 text-center transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-white/20"
             >
               <span className="grid size-11 place-items-center rounded-lg bg-white/5 text-brass-soft ring-1 ring-white/10">
                 <Icon name={p.icon} className="size-5" />

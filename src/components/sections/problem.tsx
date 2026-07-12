@@ -19,7 +19,7 @@ export function Problem() {
             <Reveal
               key={p.title}
               delay={i * 90}
-              className="rounded-xl border border-line bg-card p-6 ring-1 ring-ink/5 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-ink/5"
+              className="flex flex-col items-center rounded-xl border border-line bg-card p-6 text-center ring-1 ring-ink/5 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-ink/5"
             >
               <span className="grid size-10 place-items-center rounded-lg bg-brass-tint text-brass">
                 <TriangleAlert className="size-5" strokeWidth={1.75} aria-hidden />

@@ -53,19 +53,19 @@ export function Hero() {
       />
 
       <Container className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
-          <Eyebrow data-hero>{site.hero.eyebrow}</Eyebrow>
+        <div className="text-center lg:mx-auto">
+          <Eyebrow data-hero className="justify-center">{site.hero.eyebrow}</Eyebrow>
           <h1 data-hero className="mt-5 text-4xl leading-[1.05] sm:text-5xl lg:text-[3.4rem]">
             <span className="text-ink">{site.hero.titleLead}</span>{" "}
             <span className="bg-gradient-to-r from-blue to-blue-deep bg-clip-text text-transparent">
               {site.hero.titleAccent}
             </span>
           </h1>
-          <p data-hero className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
+          <p data-hero className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
             {site.hero.subtitle}
           </p>
 
-          <div data-hero className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div data-hero className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <ButtonLink href={demoHref()} variant="primary" size="lg">
               {site.hero.primaryCta}
               <ArrowRight className="size-4" />
@@ -76,9 +76,9 @@ export function Hero() {
           </div>
 
           {/* Stat strip */}
-          <dl data-hero className="mt-12 grid max-w-lg grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4">
+          <dl data-hero className="mx-auto mt-12 grid max-w-lg grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4">
             {site.stats.map((s) => (
-              <div key={s.label}>
+              <div key={s.label} className="text-center">
                 <dt className="tabular font-display text-2xl font-semibold text-ink">
                   {s.value}
                 </dt>

@@ -34,7 +34,7 @@ export function SectionHeader({
   eyebrow,
   title,
   subtitle,
-  center,
+  center = true,
   dark,
 }: {
   eyebrow: string;

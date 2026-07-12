@@ -20,13 +20,13 @@ export function Workflow() {
                 key={b.title}
                 className="grid items-center gap-10 lg:grid-cols-2"
               >
-                <Reveal className={cn(flip && "lg:order-2")}>
+                <Reveal className={cn("text-center", flip && "lg:order-2")}>
                   <p className="eyebrow">{b.kicker}</p>
                   <h3 className="mt-3 text-2xl text-ink sm:text-3xl">{b.title}</h3>
                   <p className="mt-4 text-base leading-relaxed text-ink-soft">
                     {b.body}
                   </p>
-                  <ul className="mt-6 flex flex-col gap-3">
+                  <ul className="mt-6 flex flex-col items-center gap-3">
                     {b.bullets.map((bl) => (
                       <li key={bl} className="flex items-center gap-3 text-sm text-ink">
                         <span className="grid size-5 shrink-0 place-items-center rounded-full bg-green-tint">

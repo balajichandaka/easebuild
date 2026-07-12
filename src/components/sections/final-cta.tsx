@@ -10,16 +10,16 @@ export function FinalCta() {
   return (
     <section id="demo" className="scroll-mt-20 py-20 sm:py-28">
       <Container className="grid items-start gap-12 lg:grid-cols-2">
-        <Reveal>
-          <Eyebrow>{finalCta.eyebrow}</Eyebrow>
+        <Reveal className="text-center">
+          <Eyebrow className="justify-center">{finalCta.eyebrow}</Eyebrow>
           <h2 className="mt-4 text-3xl leading-tight text-ink sm:text-4xl">
             {finalCta.title}
           </h2>
-          <p className="mt-4 max-w-md text-lg leading-relaxed text-ink-soft">
+          <p className="mx-auto mt-4 max-w-md text-lg leading-relaxed text-ink-soft">
             {finalCta.body}
           </p>
 
-          <div className="mt-8 flex flex-col gap-3">
+          <div className="mt-8 flex flex-col items-center gap-3">
             <a
               href={`mailto:${contact.email}`}
               className="inline-flex items-center gap-3 text-sm text-ink transition-colors hover:text-blue"
